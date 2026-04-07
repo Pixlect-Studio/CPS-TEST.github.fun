@@ -18,15 +18,27 @@
 html, body { height: 100%; background: var(--bg); color: var(--tx); font-family: 'DM Sans', sans-serif; font-size: 14px; overflow: hidden; }
 body { display: grid; grid-template-rows: 52px 1fr; }
 
-header { display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 1px solid var(--b1); background: var(--s1); }
+/* HEADER */
+header { display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 1px solid var(--b1); background: var(--s1); gap: 8px; }
 .logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--white); display: flex; align-items: center; gap: 8px; }
 .logo-dot { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; animation: pdot 2s infinite; }
 @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.6)} }
-.live-pill { display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--red); letter-spacing: 1.5px; }
+.hdr-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.live-pill { display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--red); letter-spacing: 1.5px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.15s; }
+.live-pill:hover { background: rgba(224,48,48,0.1); }
 .live-dot { width: 5px; height: 5px; background: var(--red); border-radius: 50%; animation: blink 1s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.1} }
+.erase-btn { display: none; align-items: center; gap: 6px; background: transparent; border: 1px solid var(--red); border-radius: 6px; padding: 4px 10px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--red); letter-spacing: 1px; cursor: pointer; transition: all 0.15s; }
+.erase-btn:hover { background: rgba(224,48,48,0.12); }
+body.admin-mode .erase-btn { display: flex; }
+.admin-badge { display: none; align-items: center; gap: 6px; background: #1a1000; border: 1px solid var(--orange); border-radius: 6px; padding: 4px 10px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 1px; cursor: pointer; animation: glow 2s infinite; }
+@keyframes glow { 0%,100%{box-shadow:0 0 4px rgba(224,112,32,0.2)} 50%{box-shadow:0 0 12px rgba(224,112,32,0.5)} }
+.admin-badge:hover { background: #2a1800; }
+.admin-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; animation: blink 1s infinite; }
+body.admin-mode .admin-badge { display: flex; }
 
-main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
+/* MAIN */
+main { display: grid; grid-template-columns: 1fr 320px; height: calc(100vh - 52px); overflow: hidden; }
 
 /* LEFT */
 .left { display: flex; flex-direction: column; padding: 1.2rem; gap: 0.9rem; overflow-y: auto; border-right: 1px solid var(--b1); }
@@ -36,11 +48,10 @@ main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
 .controls-row { display: flex; gap: 8px; }
 .name-in { flex: 1; background: var(--s2); border: 1px solid var(--b2); color: var(--tx); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 9px 13px; border-radius: 6px; outline: none; transition: border-color 0.2s; }
 .name-in:focus { border-color: var(--blue); }
-.name-in::placeholder { color: var(--muted); }
+.name-in::placeholder { color: var(--muted); font-size: 13px; }
 .dur-sel { background: var(--s2); border: 1px solid var(--b2); color: var(--tx); font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 11px; border-radius: 6px; outline: none; cursor: pointer; }
-.dur-sel option { background: #161616; }
+.dur-sel option { background: #1c1c1c; }
 
-/* MODE TABS */
 .mode-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .mode-tab { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 8px; border-radius: 8px; cursor: pointer; border: 1px solid var(--b2); background: var(--s2); transition: all 0.15s; user-select: none; }
 .mode-tab:hover { border-color: var(--b3); background: var(--s3); }
@@ -54,7 +65,6 @@ main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
 .mode-tab[data-mode="scroll"].active { border-color: var(--green); background: #071a0f; }
 .mode-tab[data-mode="scroll"].active .tab-name { color: var(--green); }
 
-/* STATS */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
 .sc { background: var(--s1); border: 1px solid var(--b1); border-radius: 7px; padding: 0.7rem 0.8rem; }
 .sc-lbl { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 2px; }
@@ -67,26 +77,23 @@ main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
 .tbar { height: 100%; width: 100%; border-radius: 1px; transition: width 0.1s linear, background 0.3s; background: var(--blue); }
 .tbar.urgent { background: var(--red) !important; }
 
-/* ZONE */
 .zone-wrap { flex: 1; min-height: 240px; position: relative; }
 .click-zone { width: 100%; height: 100%; background: var(--s1); border: 1px solid var(--b2); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; user-select: none; overflow: hidden; position: relative; transition: border-color 0.12s, background 0.12s; }
 .click-zone.ready:hover { border-color: var(--zone-c, var(--blue)); }
 .click-zone.running { border-color: var(--zone-c, var(--blue)); }
-.click-zone.running.mc { background: #080f1e; --zone-c: var(--blue); }
-.click-zone.running.ms { background: #100c00; --zone-c: var(--orange); }
-.click-zone.running.mw { background: #041209; --zone-c: var(--green); }
+.click-zone.running.mc { background: #080f1e; }
+.click-zone.running.ms { background: #100c00; }
+.click-zone.running.mw { background: #041209; }
 .click-zone.mc { --zone-c: var(--blue); }
 .click-zone.ms { --zone-c: var(--orange); }
 .click-zone.mw { --zone-c: var(--green); }
 .click-zone.done { cursor: default; }
-
 .zone-hint { display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; transition: opacity 0.2s; }
 .zone-icon { font-size: 36px; opacity: 0.4; }
 .zone-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; color: var(--white); }
 .zone-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
 .zone-ctr { position: absolute; top: 14px; right: 18px; font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; color: var(--white); opacity: 0.08; pointer-events: none; transition: opacity 0.2s; }
 .click-zone.running .zone-ctr { opacity: 0.2; }
-
 .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: rout 0.5s ease-out forwards; pointer-events: none; z-index: 1; }
 @keyframes rout { to { transform: scale(8); opacity: 0; } }
 .mc .ripple { background: rgba(29,110,245,0.18); }
@@ -117,38 +124,43 @@ main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
 .btn.ok { background: #071a0f; border-color: #0f3020; color: var(--green); cursor: default; }
 .btn.ghost { border-color: transparent; color: var(--muted); font-size: 12px; padding: 7px 14px; }
 .btn.ghost:hover { color: var(--tx); border-color: var(--b2); background: transparent; }
+.btn.danger { border-color: var(--red); color: var(--red); }
+.btn.danger:hover { background: rgba(224,48,48,0.1); }
 
-/* RIGHT — LEADERBOARD */
+/* RIGHT PANEL */
 .right { display: flex; flex-direction: column; background: var(--s1); overflow: hidden; }
-.lb-top { padding: 1rem 1.3rem 0.8rem; border-bottom: 1px solid var(--b1); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-.lb-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: var(--white); }
-.lb-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-.lb-cnt { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-.lb-clr { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted2); background: none; border: none; cursor: pointer; padding: 0; transition: color 0.15s; }
-.lb-clr:hover { color: var(--red); }
 
-.lb-filter { display: flex; gap: 4px; padding: 8px 1.3rem; border-bottom: 1px solid var(--b1); flex-shrink: 0; }
-.lbf { font-family: 'DM Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; color: var(--muted); background: transparent; transition: all 0.12s; }
+/* RIGHT PANEL TABS */
+.rpanel-tabs { display: flex; border-bottom: 1px solid var(--b1); flex-shrink: 0; }
+.rtab { flex: 1; padding: 10px 4px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.5px; color: var(--muted); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.rtab:hover { color: var(--tx); }
+.rtab.active { color: var(--tx); border-bottom-color: var(--blue); }
+
+.rpane { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.rpane.active { display: flex; }
+
+/* ── LEADERBOARD ── */
+.lb-top { padding: 0.8rem 1.2rem 0.6rem; border-bottom: 1px solid var(--b1); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.lb-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--white); }
+.lb-cnt { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.lb-filter { display: flex; gap: 3px; padding: 6px 1.2rem; border-bottom: 1px solid var(--b1); flex-shrink: 0; }
+.lbf { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; color: var(--muted); background: transparent; transition: all 0.12s; }
 .lbf:hover { color: var(--tx); }
 .lbf.active { background: var(--s3); border-color: var(--b2); color: var(--tx); }
-
-.lb-hdrs { display: grid; grid-template-columns: 32px 1fr 68px 60px; padding: 6px 1.3rem; flex-shrink: 0; }
+.lb-hdrs { display: grid; grid-template-columns: 28px 1fr 60px 54px; padding: 5px 1.2rem; flex-shrink: 0; }
 .lb-hdr { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
 .lb-hdr:nth-child(3), .lb-hdr:nth-child(4) { text-align: right; }
-
 .lb-list { flex: 1; overflow-y: auto; padding: 0.2rem 0; }
 .lb-list::-webkit-scrollbar { width: 3px; }
 .lb-list::-webkit-scrollbar-thumb { background: var(--b2); border-radius: 2px; }
-
-.lb-row { display: grid; grid-template-columns: 32px 1fr 68px 60px; align-items: center; padding: 8px 1.3rem; transition: background 0.1s; border-left: 2px solid transparent; animation: slin 0.3s ease; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.lb-row { display: grid; grid-template-columns: 28px 1fr 60px 54px; align-items: center; padding: 7px 1.2rem; transition: background 0.1s; border-left: 2px solid transparent; animation: slin 0.3s ease; }
 @keyframes slin { from{opacity:0;transform:translateX(-5px)} to{opacity:1;transform:translateX(0)} }
 .lb-row:hover { background: var(--s2); }
 .lb-row.rk1 { border-left-color: var(--gold); }
 .lb-row.rk2 { border-left-color: var(--silver); }
 .lb-row.rk3 { border-left-color: var(--bronze); }
 .lb-row.me { background: #08101e; }
-.lb-rank { font-family: 'DM Mono', monospace; font-size: 11px; }
+.lb-rank { font-family: 'DM Mono', monospace; font-size: 10px; }
 .rk1 .lb-rank { color: var(--gold); }
 .rk2 .lb-rank { color: var(--silver); }
 .rk3 .lb-rank { color: var(--bronze); }
@@ -162,57 +174,113 @@ main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
 .rk2 .lb-bfill { background: var(--silver); }
 .rk3 .lb-bfill { background: var(--bronze); }
 .lb-row:not(.rk1):not(.rk2):not(.rk3) .lb-bfill { background: var(--b3); }
-.lb-score { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--white); text-align: right; }
-.lb-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-align: right; }
+.lb-score { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: var(--white); text-align: right; }
+.lb-meta { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-align: right; }
 .lb-tag { font-size: 8px; color: var(--muted2); display: block; }
 .mdot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 .mdot-click { background: var(--blue); }
 .mdot-space { background: var(--orange); }
 .mdot-scroll { background: var(--green); }
-
-.lb-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 180px; color: var(--muted); gap: 6px; }
-.lb-empty-icon { font-size: 24px; opacity: 0.15; }
+.lb-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 140px; color: var(--muted); gap: 6px; }
+.lb-empty-icon { font-size: 22px; opacity: 0.15; }
 .lb-empty-txt { font-size: 11px; font-family: 'DM Mono', monospace; }
 
-.conn-strip { padding: 8px 1.3rem; font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); border-top: 1px solid var(--b1); display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+/* ── CHAT ── */
+.chat-msgs { flex: 1; overflow-y: auto; padding: 0.6rem; display: flex; flex-direction: column; gap: 8px; }
+.chat-msgs::-webkit-scrollbar { width: 3px; }
+.chat-msgs::-webkit-scrollbar-thumb { background: var(--b2); border-radius: 2px; }
+.chat-msg { display: flex; flex-direction: column; gap: 2px; animation: slin 0.2s ease; }
+.chat-name { font-size: 11px; font-weight: 600; color: var(--blue); font-family: 'DM Mono', monospace; display: flex; align-items: center; gap: 6px; }
+.chat-name.is-admin { color: var(--orange); }
+.chat-time { font-size: 9px; color: var(--muted2); font-weight: 400; }
+.chat-text { font-size: 12px; color: var(--tx); line-height: 1.45; word-break: break-word; }
+.chat-msg.sys .chat-text { color: var(--muted); font-style: italic; font-size: 11px; }
+.chat-input-row { display: flex; gap: 6px; padding: 8px; border-top: 1px solid var(--b1); flex-shrink: 0; }
+.chat-in { flex: 1; background: var(--s2); border: 1px solid var(--b2); color: var(--tx); font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 7px 10px; border-radius: 6px; outline: none; transition: border-color 0.2s; }
+.chat-in:focus { border-color: var(--blue); }
+.chat-in::placeholder { color: var(--muted); }
+.chat-send { background: var(--blue); border: none; color: var(--white); font-size: 14px; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; transition: background 0.15s; flex-shrink: 0; }
+.chat-send:hover { background: var(--blue2); }
+
+/* ── BATTLE ── */
+.battle-lobby { flex: 1; display: flex; flex-direction: column; padding: 1rem; gap: 10px; overflow-y: auto; }
+.battle-head { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--white); text-align: center; }
+.battle-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-align: center; line-height: 1.6; }
+.battle-rooms-list { display: flex; flex-direction: column; gap: 6px; }
+.battle-room-row { display: flex; align-items: center; justify-content: space-between; background: var(--s2); border: 1px solid var(--b2); border-radius: 7px; padding: 8px 10px; }
+.brr-name { font-size: 12px; font-weight: 500; color: var(--tx); }
+.brr-info { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.no-rooms { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-align: center; padding: 1rem 0; }
+
+.battle-active-view { flex: 1; display: flex; flex-direction: column; padding: 1rem; gap: 10px; }
+.bav-status { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-align: center; }
+.bav-vs { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+.bav-player { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.bav-pname { font-size: 11px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; text-align: center; }
+.bav-pscore { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; color: var(--white); }
+.bav-pscore.win { color: var(--green); }
+.bav-pscore.lose { color: var(--red); }
+.bav-vstext { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--muted); letter-spacing: 2px; }
+.bav-bar-wrap { height: 3px; background: var(--s3); border-radius: 2px; overflow: hidden; }
+.bav-bar { height: 100%; background: var(--blue); border-radius: 2px; transition: width 0.1s linear; }
+.bav-bar.urgent { background: var(--red); }
+.bav-result { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 1rem; background: var(--s2); border-radius: 8px; border: 1px solid var(--b2); }
+.bav-winner { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--white); text-align: center; }
+.bav-winner-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-align: center; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--red); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 10px 20px 10px 14px; border-radius: 8px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 24px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 9999; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: all; }
+.toast-x { opacity: 0.7; cursor: pointer; font-size: 16px; line-height: 1; }
+.toast-x:hover { opacity: 1; }
+
+/* ADMIN MODAL */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 99999; backdrop-filter: blur(4px); }
+.modal-bg.show { display: flex; }
+.modal { background: var(--s1); border: 1px solid var(--b2); border-radius: 12px; padding: 1.75rem; width: 300px; display: flex; flex-direction: column; gap: 12px; animation: fin 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--white); }
+.modal-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: -6px; }
+.modal-in { background: var(--s2); border: 1px solid var(--b2); color: var(--tx); font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 2px; padding: 10px 14px; border-radius: 6px; outline: none; transition: border-color 0.2s; width: 100%; }
+.modal-in:focus { border-color: var(--blue); }
+.modal-in.wrong { border-color: var(--red) !important; animation: shake 0.3s ease; }
+.modal-err { font-size: 11px; color: var(--red); font-family: 'DM Mono', monospace; min-height: 16px; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ANIMATIONS */
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+@keyframes slin { from{opacity:0;transform:translateX(-5px)} to{opacity:1;transform:translateX(0)} }
+
+.conn-strip { padding: 7px 1.2rem; font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); border-top: 1px solid var(--b1); display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 .cdot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: background 0.3s; }
 .cdot.ok { background: var(--green); }
 .cdot.err { background: var(--red); }
 
-@media (max-width: 680px) {
+body.admin-mode .name-in { border-color: var(--orange) !important; }
+
+@media (max-width: 600px) {
   main { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
-  .left { border-right: none; border-bottom: 1px solid var(--b1); }
-  .right { min-height: 300px; }
+  .right { min-height: 320px; border-top: 1px solid var(--b1); }
   body, html { height: auto; overflow: auto; }
 }
 
-/* ── TOAST POPUP ── */
-.toast {
-  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--red); color: #fff;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-  padding: 10px 20px 10px 14px; border-radius: 8px;
-  display: flex; align-items: center; gap: 10px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
-  z-index: 9999; white-space: nowrap;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast-icon { font-size: 16px; }
-.toast-close { margin-left: 6px; opacity: 0.7; cursor: pointer; font-size: 16px; line-height: 1; pointer-events: all; }
-.toast-close:hover { opacity: 1; }
+.admin-star { color: #ffd700; font-size: 11px; margin-left: 3px; vertical-align: middle; filter: drop-shadow(0 0 4px rgba(255,215,0,0.6)); }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo"><div class="logo-dot"></div>CPS LAB</div>
-  <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+  <div class="hdr-right">
+    <button class="erase-btn" id="erase-btn" onclick="adminClearBoard()">🗑 ERASE BOARD</button>
+    <div class="admin-badge" id="admin-badge" onclick="revokeAdmin()">
+      <div class="admin-badge-dot"></div>[ADMIN]
+    </div>
+    <div class="live-pill" onclick="adminPrompt()"><div class="live-dot"></div>LIVE</div>
+  </div>
 </header>
 
 <main>
-  <!-- LEFT -->
+  <!-- LEFT: TESTER -->
   <div class="left">
     <div class="controls-row">
       <input class="name-in" id="name-in" placeholder="Your name (required to submit)" maxlength="20">
@@ -260,7 +328,6 @@ main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
           <div class="zone-sub" id="zone-sub">mouse clicks only</div>
         </div>
         <div class="zone-ctr" id="zone-ctr">0</div>
-
         <div class="result-overlay" id="result-ov">
           <div class="ro-lbl">YOUR SCORE</div>
           <div class="ro-score" id="ro-score">0.0</div>
@@ -278,56 +345,128 @@ main { display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
     </div>
   </div>
 
-  <!-- RIGHT -->
+  <!-- RIGHT: TABBED PANEL -->
   <div class="right">
-    <div class="lb-top">
-      <div class="lb-title">LEADERBOARD</div>
-      <div class="lb-right">
+    <div class="rpanel-tabs">
+      <button class="rtab active" id="rtab-lb"     onclick="switchRTab('lb')">🏆 BOARD</button>
+      <button class="rtab"        id="rtab-chat"   onclick="switchRTab('chat')">💬 CHAT</button>
+      <button class="rtab"        id="rtab-battle" onclick="switchRTab('battle')">⚔️ 1V1</button>
+    </div>
+
+    <!-- LEADERBOARD PANE -->
+    <div class="rpane active" id="rpane-lb">
+      <div class="lb-top">
+        <div class="lb-title">LEADERBOARD</div>
         <div class="lb-cnt" id="lb-cnt">0 entries</div>
-        <button class="lb-clr" onclick="clearBoard()">clear all</button>
+      </div>
+      <div class="lb-filter">
+        <button class="lbf active" data-f="all"    onclick="setFilter('all')">ALL</button>
+        <button class="lbf"        data-f="click"  onclick="setFilter('click')">🖱</button>
+        <button class="lbf"        data-f="space"  onclick="setFilter('space')">⌨</button>
+        <button class="lbf"        data-f="scroll" onclick="setFilter('scroll')">🖲</button>
+      </div>
+      <div class="lb-hdrs">
+        <div class="lb-hdr">#</div>
+        <div class="lb-hdr">Player</div>
+        <div class="lb-hdr">Score</div>
+        <div class="lb-hdr">Count</div>
+      </div>
+      <div class="lb-list" id="lb-list">
+        <div class="lb-empty"><div class="lb-empty-icon">◎</div><div class="lb-empty-txt">loading…</div></div>
+      </div>
+      <div class="conn-strip">
+        <div class="cdot" id="cdot"></div>
+        <span id="ctext">connecting…</span>
       </div>
     </div>
-    <div class="lb-filter">
-      <button class="lbf active" data-f="all"    onclick="setFilter('all')">ALL</button>
-      <button class="lbf"        data-f="click"  onclick="setFilter('click')">🖱 CLICK</button>
-      <button class="lbf"        data-f="space"  onclick="setFilter('space')">⌨ SPACE</button>
-      <button class="lbf"        data-f="scroll" onclick="setFilter('scroll')">🖲 SCROLL</button>
+
+    <!-- CHAT PANE -->
+    <div class="rpane" id="rpane-chat">
+      <div class="chat-msgs" id="chat-msgs">
+        <div class="chat-msg sys"><div class="chat-text">Welcome! Keep it clean and friendly 👋</div></div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-in" id="chat-in" placeholder="say something nice…" maxlength="120" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
     </div>
-    <div class="lb-hdrs">
-      <div class="lb-hdr">#</div>
-      <div class="lb-hdr">Player</div>
-      <div class="lb-hdr">Score</div>
-      <div class="lb-hdr">Count</div>
-    </div>
-    <div class="lb-list" id="lb-list">
-      <div class="lb-empty"><div class="lb-empty-icon">◎</div><div class="lb-empty-txt">connecting…</div></div>
-    </div>
-    <div class="conn-strip">
-      <div class="cdot" id="cdot"></div>
-      <span id="ctext">connecting to firebase…</span>
+
+    <!-- BATTLE PANE -->
+    <div class="rpane" id="rpane-battle">
+
+      <!-- LOBBY -->
+      <div class="battle-lobby" id="b-lobby">
+        <div class="battle-head">⚔️ 1V1 BATTLE</div>
+        <div class="battle-sub">Challenge someone!<br>Highest CPS in the same duration wins.</div>
+        <div class="battle-rooms-list" id="b-rooms">
+          <div class="no-rooms">no open rooms</div>
+        </div>
+        <button class="btn primary" style="width:100%;margin-top:auto;" onclick="createRoom()">+ CREATE ROOM</button>
+      </div>
+
+      <!-- ACTIVE -->
+      <div class="battle-active-view" id="b-active" style="display:none;">
+        <div class="bav-status" id="bav-status">waiting for opponent…</div>
+        <div class="bav-vs">
+          <div class="bav-player">
+            <div class="bav-pname" id="bav-p1"></div>
+            <div class="bav-pscore" id="bav-s1">0.0</div>
+          </div>
+          <div class="bav-vstext">VS</div>
+          <div class="bav-player">
+            <div class="bav-pname" id="bav-p2">—</div>
+            <div class="bav-pscore" id="bav-s2">0.0</div>
+          </div>
+        </div>
+        <div class="bav-bar-wrap"><div class="bav-bar" id="bav-bar"></div></div>
+        <div class="bav-result" id="bav-result" style="display:none;">
+          <div class="bav-winner" id="bav-winner"></div>
+          <div class="bav-winner-sub" id="bav-winner-sub"></div>
+        </div>
+        <button class="btn ghost" onclick="leaveRoom()" style="margin-top:auto;font-size:11px;">leave room</button>
+      </div>
+
     </div>
   </div>
 </main>
 
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-msg"></span>
+  <span class="toast-x" onclick="hideToast()">✕</span>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-bg" id="modal-admin" onclick="if(event.target===this)closeAdminModal()">
+  <div class="modal">
+    <div class="modal-title">ADMIN ACCESS</div>
+    <div class="modal-sub">enter passcode</div>
+    <input class="modal-in" id="admin-in" type="password" placeholder="passcode…" onkeydown="if(event.key==='Enter')checkAdmin();if(event.key==='Escape')closeAdminModal()" autocomplete="off">
+    <div class="modal-err" id="admin-err"></div>
+    <div class="modal-btns">
+      <button class="btn ghost" onclick="closeAdminModal()">cancel</button>
+      <button class="btn primary" onclick="checkAdmin()">CONFIRM</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ── FIREBASE CONFIG ──────────────────────────────────────────────────────────
-const FB = 'https://cps-test-404-default-rtdb.firebaseio.com';
+// ── CONFIG ───────────────────────────────────────────────────────────────────
+const FB         = 'https://cps-test-404-default-rtdb.firebaseio.com';
+const ADMIN_CODE = '$404$';
 
 // ── STATE ────────────────────────────────────────────────────────────────────
-let mode = 'click';
-let DURATION = 5;
-let running = false, startTime = null, ticker = null;
-let count = 0;
+let mode = 'click', DURATION = 5;
+let running = false, startTime = null, ticker = null, count = 0;
 let myId = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-let scores = {};       // fbKey → entry
-let lastResult = null;
-let submitted = false;
-let lbFilter = 'all';
+let scores = {}, lastResult = null, submitted = false, lbFilter = 'all';
+let myRoom = null, myRole = null, battleRunning = false, battleClicks = 0, battleStart = null, battleDone = false, battleReady = false, battleDuration = 5;
+let battleTicker = null, battlePollTimer = null;
 
 const MODES = {
-  click:  { icon:'🖱️', title:'CLICK TO START',  sub:'mouse clicks only',     rateLbl:'CPS',   countLbl:'CLICKS', unit:'clicks per second',  cls:'mc', tbarColor:'var(--blue)'   },
-  space:  { icon:'⌨️',  title:'SLAM TO START',   sub:'hammer that space bar', rateLbl:'SPS',   countLbl:'SLAMS',  unit:'slams per second',   cls:'ms', tbarColor:'var(--orange)' },
-  scroll: { icon:'🖲️', title:'SCROLL TO START', sub:'scroll wheel only',      rateLbl:'PX/S',  countLbl:'PIXELS', unit:'pixels per second',  cls:'mw', tbarColor:'var(--green)'  },
+  click:  { icon:'🖱️', title:'CLICK TO START',  sub:'mouse clicks only',     rateLbl:'CPS',  countLbl:'CLICKS', unit:'clicks per second', cls:'mc', color:'var(--blue)'   },
+  space:  { icon:'⌨️',  title:'SLAM TO START',   sub:'hammer that space bar', rateLbl:'SPS',  countLbl:'SLAMS',  unit:'slams per second',  cls:'ms', color:'var(--orange)' },
+  scroll: { icon:'🖲️', title:'SCROLL TO START', sub:'scroll wheel only',      rateLbl:'PX/S', countLbl:'PIXELS', unit:'pixels per second', cls:'mw', color:'var(--green)'  },
 };
 
 // ── DOM ──────────────────────────────────────────────────────────────────────
@@ -358,162 +497,140 @@ const lbCnt    = document.getElementById('lb-cnt');
 const cdot     = document.getElementById('cdot');
 const ctext    = document.getElementById('ctext');
 
-// ── FIREBASE HELPERS ─────────────────────────────────────────────────────────
+// ── FIREBASE ─────────────────────────────────────────────────────────────────
 async function fbGet(path) {
   const r = await fetch(`${FB}/${path}.json`);
-  if (!r.ok) throw new Error('FB GET failed: ' + r.status);
+  if (!r.ok) throw new Error(r.status);
   return r.json();
 }
-
 async function fbPush(path, data) {
-  const r = await fetch(`${FB}/${path}.json`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (!r.ok) throw new Error('FB PUSH failed: ' + r.status);
+  const r = await fetch(`${FB}/${path}.json`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+  if (!r.ok) throw new Error(r.status);
   return r.json();
 }
-
+async function fbPatch(path, data) {
+  const r = await fetch(`${FB}/${path}.json`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
 async function fbDelete(path) {
-  const r = await fetch(`${FB}/${path}.json`, { method: 'DELETE' });
-  if (!r.ok) throw new Error('FB DELETE failed: ' + r.status);
-  return r.json();
+  await fetch(`${FB}/${path}.json`, { method:'DELETE' });
 }
-
 
 // ── TOAST ────────────────────────────────────────────────────────────────────
 let toastTimer = null;
-function showToast(msg) {
+function showToast(msg, color) {
   const t = document.getElementById('toast');
+  t.style.background = color || 'var(--red)';
   document.getElementById('toast-msg').textContent = msg;
   t.classList.add('show');
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(hideToast, 3000);
 }
-function hideToast() {
-  document.getElementById('toast').classList.remove('show');
-}
+function hideToast() { document.getElementById('toast').classList.remove('show'); }
 
-// ── FIREBASE POLLING ────────────────────────────────────────────────────────
-let pollTimer = null;
-let lastHash = '';
-
-async function loadScores() {
-  try {
-    const data = await fbGet('scores');
-    const newScores = {};
-    if (data) {
-      Object.entries(data).forEach(([k, v]) => {
-        if (v && v.id) newScores[k] = v;
-      });
-    }
-    // Only re-render if data actually changed
-    const hash = JSON.stringify(newScores);
-    if (hash !== lastHash) {
-      lastHash = hash;
-      scores = newScores;
-      renderLb();
-    }
-    cdot.className = 'cdot ok';
-    ctext.textContent = 'connected · live';
-  } catch(e) {
-    cdot.className = 'cdot err';
-    ctext.textContent = 'retrying…';
-  }
-}
-
-function startStream() {
-  loadScores();
-  if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(loadScores, 1000);
+// ── TAB SWITCHING ────────────────────────────────────────────────────────────
+function switchRTab(tab) {
+  ['lb','chat','battle'].forEach(t => {
+    document.getElementById(`rtab-${t}`).classList.toggle('active', t===tab);
+    document.getElementById(`rpane-${t}`).classList.toggle('active', t===tab);
+  });
 }
 
 // ── MODE ─────────────────────────────────────────────────────────────────────
 function setMode(m) {
   if (running) return;
   mode = m;
-  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode===m));
   const mt = MODES[m];
   zone.className = `click-zone ready ${mt.cls}`;
-  zoneIcon.textContent  = mt.icon;
-  zoneTitle.textContent = mt.title;
-  zoneSub.textContent   = mt.sub;
-  rateLbl.textContent   = mt.rateLbl;
-  countLbl.textContent  = mt.countLbl;
-  tbar.style.background = mt.tbarColor;
+  zoneIcon.textContent = mt.icon; zoneTitle.textContent = mt.title; zoneSub.textContent = mt.sub;
+  rateLbl.textContent = mt.rateLbl; countLbl.textContent = mt.countLbl;
+  tbar.style.background = mt.color;
   updatePb();
 }
 
-durSel.addEventListener('change', () => {
-  if (!running) { DURATION = +durSel.value; resetDisplay(); }
-});
+durSel.addEventListener('change', () => { if (!running) { DURATION = +durSel.value; resetDisplay(); } });
 
 // ── ROASTS ───────────────────────────────────────────────────────────────────
 const ROASTS = {
   click: {
-    god:    ["Your finger is literally a blur. Terrifying.","Your mouse is filing a restraining order.","Science wants to study you. Not in a good way.","You click like you owe someone money."],
-    insane: ["Touch grass. Immediately.","Your tendons will send you a bill tomorrow.","Bro turned into a hummingbird.","Doctors hate this one weird trick."],
-    pro:    ["Fast fingers, slow everything else probably.","Mildly impressive. Don't let it go to your head.","You've clearly practiced this instead of something useful.","Your parents are proud. Confused, but proud."],
-    fast:   ["Mid. Comfortably, confidently mid.","Your mouse is underwhelmed.","Not embarrassing. But close.","A golf clap. That's all you're getting."],
-    avg:    ["Is that clicking or are you napping?","Your fingers called in sick today.","Even your shadow clicked faster.","Were you using your elbow?"],
-    bad:    ["Sir, are you okay?","Two fingers and still this slow?","My disappointment is immeasurable.","A sloth with oven mitts is warming up."],
+    god:["Your finger is a blur. Terrifying.","Your mouse is filing a restraining order.","Science wants to study you.","You click like you owe someone money."],
+    insane:["Touch grass. Immediately.","Your tendons will send you a bill.","Bro became a hummingbird.","Doctors hate this one weird trick."],
+    pro:["Fast fingers, slow everything else.","Mildly impressive. Don't let it go to your head.","Practiced this instead of something useful.","Fast. Somehow concerning."],
+    fast:["Mid. Comfortably mid.","Your mouse is underwhelmed.","Not embarrassing. But close.","A golf clap. That's all."],
+    avg:["Is that clicking or napping?","Your fingers called in sick.","Even your shadow clicked faster.","Were you using your elbow?"],
+    bad:["Sir are you okay?","My disappointment is immeasurable.","A sloth with oven mitts is warming up.","Bold of you to submit this."],
   },
   space: {
-    god:    ["Your keyboard is weeping.","That spacebar has PTSD now.","You turned a keyboard into a weapon.","NASA wants their vibration tester back."],
-    insane: ["Your desk hates you personally.","The spacebar is considering early retirement.","Your neighbours just filed a noise complaint.","We can see you from orbit."],
-    pro:    ["Aggressive typing. Respect.","A little unhinged. We love it.","Your spacebar has seen things.","Committed. Violently so."],
-    fast:   ["Respectable violence.","Your spacebar felt that.","It's giving 'frustrated at a loading screen'.","Mid slammer. There's still time."],
-    avg:    ["Were you tapping or patting it?","The spacebar yawned.","My nan types harder than that.","Gentle. Way too gentle."],
-    bad:    ["That was a tap, not a slam.","The spacebar is insulted.","Did you use one finger? Just one?","My disappointment fills the room."],
+    god:["Your keyboard has PTSD now.","You turned a keyboard into a weapon.","NASA wants their tester back.","The spacebar is traumatised."],
+    insane:["Your desk hates you personally.","Neighbours filed a noise complaint.","We can see you from orbit.","The spacebar is retiring."],
+    pro:["A little unhinged. We love it.","Committed. Violently so.","Your spacebar has seen things.","Aggressive typing. Respect."],
+    fast:["Respectable violence.","It's giving frustrated at a loading screen.","Mid slammer. There's still time.","Your spacebar felt that."],
+    avg:["Were you tapping or patting it?","My nan types harder than that.","The spacebar yawned.","Gentle. Way too gentle."],
+    bad:["That was a tap not a slam.","The spacebar is insulted.","Did you use one finger?","My disappointment fills the room."],
   },
   scroll: {
-    god:    ["Your scroll wheel needs therapy.","The mouse wheel has left the building.","You scrolled through the entire internet.","Your wrist is a marvel of engineering."],
-    insane: ["That's not scrolling, that's an assault.","Your mouse wheel is filing a report.","Were you trying to drill through the desk?","Concerningly vigorous. We're watching you."],
-    pro:    ["You scroll like you're angry at a website.","A solid scroll. Unhinged but solid.","Committed to the bit. Respect.","Your mouse wheel is getting tired."],
-    fast:   ["Decent scroll. Nothing to write home about.","The wheel spun. We noted it.","Somewhere a UX designer is crying.","Mid scrolling. The floor is yours."],
-    avg:    ["Did you move the wheel or just breathe on it?","The wheel barely noticed.","Gentle. Like reading a Sunday paper.","Your scroll speed suggests a very large monitor."],
-    bad:    ["Was that a scroll or a suggestion?","The wheel is confused.","My disappointment scrolls endlessly.","You scrolled like you were scared of it."],
+    god:["Your scroll wheel needs therapy.","You scrolled through the entire internet.","Your wrist is a marvel.","The wheel has left the building."],
+    insane:["That's not scrolling, that's an assault.","Were you trying to drill through the desk?","Concerningly vigorous.","Your mouse wheel filed a report."],
+    pro:["You scroll like you're angry at a website.","Solid scroll. Unhinged but solid.","Committed to the bit.","Your mouse wheel is tired."],
+    fast:["Decent scroll. Nothing to write home about.","Mid scrolling.","Somewhere a UX designer is crying.","The wheel spun. We noted it."],
+    avg:["Did you move the wheel or breathe on it?","The wheel barely noticed.","Like reading a Sunday paper.","Very gentle. Very slow."],
+    bad:["Was that a scroll or a suggestion?","My disappointment scrolls endlessly.","You scrolled like you were scared.","The wheel is confused."],
   }
 };
-
-function getRoast(val, m) {
+function getRoast(v, m) {
   const p = ROASTS[m];
-  const tier = val >= 15 ? p.god : val >= 10 ? p.insane : val >= 7 ? p.pro : val >= 5 ? p.fast : val >= 3 ? p.avg : p.bad;
-  return tier[Math.floor(Math.random()*tier.length)];
+  const t = v>=15?p.god:v>=10?p.insane:v>=7?p.pro:v>=5?p.fast:v>=3?p.avg:p.bad;
+  return t[Math.floor(Math.random()*t.length)];
 }
-function getGrade(val, m) {
+function getGrade(v, m) {
   if (m==='scroll') {
-    if (val>=3000) return {text:'SCROLL GOD',      color:'#22c55e'};
-    if (val>=1500) return {text:'WHEEL DEMON',     color:'#e07020'};
-    if (val>=600)  return {text:'SOLID SCROLLER',  color:'#1d6ef5'};
-    if (val>=200)  return {text:'AVERAGE',          color:'#666'};
-    return                {text:'BARELY SCROLLED', color:'#444'};
+    if (v>=3000) return {t:'SCROLL GOD',c:'#22c55e'};
+    if (v>=1500) return {t:'WHEEL DEMON',c:'#e07020'};
+    if (v>=600)  return {t:'SOLID SCROLLER',c:'#1d6ef5'};
+    if (v>=200)  return {t:'AVERAGE',c:'#666'};
+    return              {t:'BARELY SCROLLED',c:'#444'};
   }
-  if (val>=15) return {text:'SUPERHUMAN',    color:'#e03030'};
-  if (val>=12) return {text:'INSANE SPEED',  color:'#e07020'};
-  if (val>=9)  return {text:'PRO GAMER',     color:'#1d6ef5'};
-  if (val>=7)  return {text:'FAST',           color:'#888'};
-  if (val>=5)  return {text:'AVERAGE',        color:'#555'};
-  return              {text:'KEEP PRACTICING',color:'#444'};
+  if (v>=15) return {t:'SUPERHUMAN',c:'#e03030'};
+  if (v>=12) return {t:'INSANE SPEED',c:'#e07020'};
+  if (v>=9)  return {t:'PRO GAMER',c:'#1d6ef5'};
+  if (v>=7)  return {t:'FAST',c:'#888'};
+  if (v>=5)  return {t:'AVERAGE',c:'#555'};
+  return           {t:'KEEP PRACTICING',c:'#444'};
 }
 
-// ── INPUT HANDLERS ───────────────────────────────────────────────────────────
+// ── INPUT ────────────────────────────────────────────────────────────────────
 zone.addEventListener('click', (e) => {
-  if (zone.classList.contains('done') || mode !== 'click') return;
+  // If battle ready but not started — self-start on first click
+  if (battleReady && !battleRunning && !battleDone) {
+    battleReady = false;
+    startBattle(battleDuration);
+    battleClicks = 1;
+    spawnRipple(e);
+    return;
+  }
+  // During battle, count clicks
+  if (battleRunning) {
+    battleClicks++;
+    spawnRipple(e);
+    return;
+  }
+  if (zone.classList.contains('done') || mode!=='click') return;
   handleInput(e, 1);
 });
-
 document.addEventListener('keydown', (e) => {
-  if (e.code !== 'Space') return;
+  if (e.code!=='Space') return;
+  // Don't intercept space when user is typing in any input/textarea
+  const tag = document.activeElement.tagName.toLowerCase();
+  if (tag === 'input' || tag === 'textarea') return;
   e.preventDefault();
-  if (mode !== 'space' || zone.classList.contains('done') || e.repeat) return;
+  if (mode!=='space' || zone.classList.contains('done') || e.repeat) return;
   handleInput(null, 1);
 });
-
 document.addEventListener('wheel', (e) => {
-  if (mode !== 'scroll') return;
-  e.preventDefault(); // lock page scroll when in scroll mode
+  if (mode!=='scroll') return;
+  e.preventDefault();
   if (zone.classList.contains('done')) return;
   handleInput(null, Math.abs(e.deltaY));
 }, { passive: false });
@@ -522,165 +639,135 @@ function handleInput(e, amount) {
   if (zone.classList.contains('done')) return;
   if (!running) {
     DURATION = +durSel.value;
-    running = true; count = 0; startTime = Date.now(); submitted = false;
-    const mt = MODES[mode];
-    zone.classList.remove('ready');
-    zone.classList.add('running');
-    zoneHint.style.opacity = '0.12';
-    zoneTitle.textContent = mode==='click' ? 'CLICK!' : mode==='space' ? 'SLAM!' : 'SCROLL!';
-    zoneSub.textContent = '';
-    nameIn.disabled = true;
-    ticker = setInterval(tick, 50);
+    running=true; count=0; startTime=Date.now(); submitted=false;
+    zone.classList.remove('ready'); zone.classList.add('running');
+    zoneHint.style.opacity='0.12';
+    zoneTitle.textContent = mode==='click'?'CLICK!':mode==='space'?'SLAM!':'SCROLL!';
+    zoneSub.textContent='';
+    nameIn.disabled=true;
+    ticker=setInterval(tick, 50);
   }
-  count += amount;
-  const display = mode==='scroll' ? Math.round(count) : count;
-  zoneCtr.textContent = display;
-  sCount.textContent  = display;
+  count+=amount;
+  const d = mode==='scroll'?Math.round(count):count;
+  zoneCtr.textContent=d; sCount.textContent=d;
   if (e) spawnRipple(e);
 }
 
 function spawnRipple(e) {
-  const r = document.createElement('div');
-  r.className = 'ripple';
-  const rect = zone.getBoundingClientRect(), s = 60;
-  r.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;`;
-  zone.appendChild(r);
-  setTimeout(() => r.remove(), 520);
+  const r=document.createElement('div'); r.className='ripple';
+  const rect=zone.getBoundingClientRect(), s=60;
+  r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;`;
+  zone.appendChild(r); setTimeout(()=>r.remove(),520);
 }
 
 function tick() {
   if (!running) return;
-  const elapsed = (Date.now()-startTime)/1000;
-  const remaining = Math.max(0, DURATION-elapsed);
-  tbar.style.width = ((remaining/DURATION)*100)+'%';
-  tbar.className = 'tbar' + (remaining < DURATION*0.3 ? ' urgent' : '');
-  if (!tbar.classList.contains('urgent')) tbar.style.background = MODES[mode].tbarColor;
-  sTime.textContent = remaining.toFixed(1);
-  const rate = elapsed > 0 ? count/elapsed : 0;
-  sRate.textContent = mode==='scroll' ? Math.round(rate) : rate.toFixed(1);
-  if (remaining <= 0) finishTest();
+  const elapsed=(Date.now()-startTime)/1000;
+  const rem=Math.max(0,DURATION-elapsed);
+  tbar.style.width=((rem/DURATION)*100)+'%';
+  tbar.className='tbar'+(rem<DURATION*0.3?' urgent':'');
+  if (!tbar.classList.contains('urgent')) tbar.style.background=MODES[mode].color;
+  sTime.textContent=rem.toFixed(1);
+  sRate.textContent=mode==='scroll'?Math.round(count/elapsed):(count/elapsed).toFixed(1);
+  if (rem<=0) finishTest();
 }
 
 function finishTest() {
-  running = false; clearInterval(ticker);
-  const finalRate = parseFloat((count/DURATION).toFixed(mode==='scroll'?0:2));
-  sRate.textContent = mode==='scroll' ? Math.round(finalRate) : finalRate.toFixed(1);
-  tbar.style.width = '0%'; sTime.textContent = '0.0';
+  running=false; clearInterval(ticker);
+  const fr=parseFloat((count/DURATION).toFixed(mode==='scroll'?0:2));
+  sRate.textContent=mode==='scroll'?Math.round(fr):fr.toFixed(1);
+  tbar.style.width='0%'; sTime.textContent='0.0';
   zone.classList.remove('running'); zone.classList.add('done');
-  zoneHint.style.opacity = '0';
-
-  lastResult = { id:myId, name:getName(), score:finalRate, count:Math.round(count), mode, duration:DURATION, ts:Date.now() };
-
-  const pbKey = `pb_${mode}_${DURATION}`;
-  const oldPb = parseFloat(localStorage.getItem(pbKey)||'0');
-  const isNew = finalRate > oldPb;
-  if (isNew) localStorage.setItem(pbKey, finalRate);
-
-  roScore.textContent = mode==='scroll' ? Math.round(finalRate) : finalRate.toFixed(1);
-  roUnit.textContent  = MODES[mode].unit;
-  const g = getGrade(finalRate, mode);
-  roGrade.textContent = g.text; roGrade.style.color = g.color;
-  roRoast.textContent = getRoast(finalRate, mode);
-
-  if (isNew) {
-    roPb.className = 'ro-pb isnew'; roPb.textContent = '★ NEW PERSONAL BEST!';
-  } else {
-    roPb.className = 'ro-pb isold';
-    roPb.textContent = `PB: ${mode==='scroll'?Math.round(oldPb):oldPb.toFixed(1)} ${MODES[mode].rateLbl}`;
-  }
-
-  subBtn.textContent = 'SUBMIT TO BOARD';
-  subBtn.className = 'btn primary'; subBtn.disabled = false;
+  zoneHint.style.opacity='0';
+  lastResult={id:myId,name:getName(),score:fr,count:Math.round(count),mode,duration:DURATION,ts:Date.now()};
+  const pbKey=`pb_${mode}_${DURATION}`;
+  const oldPb=parseFloat(localStorage.getItem(pbKey)||'0');
+  const isNew=fr>oldPb;
+  if (isNew) localStorage.setItem(pbKey,fr);
+  roScore.textContent=mode==='scroll'?Math.round(fr):fr.toFixed(1);
+  roUnit.textContent=MODES[mode].unit;
+  const g=getGrade(fr,mode);
+  roGrade.textContent=g.t; roGrade.style.color=g.c;
+  roRoast.textContent=getRoast(fr,mode);
+  if (isNew) { roPb.className='ro-pb isnew'; roPb.textContent='★ NEW PERSONAL BEST!'; }
+  else { roPb.className='ro-pb isold'; roPb.textContent=`PB: ${mode==='scroll'?Math.round(oldPb):oldPb.toFixed(1)} ${MODES[mode].rateLbl}`; }
+  subBtn.textContent='SUBMIT TO BOARD'; subBtn.className='btn primary'; subBtn.disabled=false;
   resultOv.classList.add('show');
   updatePb();
 }
 
-// ── SUBMIT ───────────────────────────────────────────────────────────────────
 async function submitScore() {
-  if (!lastResult || submitted) return;
+  if (!lastResult||submitted) return;
   if (!nameIn.value.trim()) {
-    nameIn.style.borderColor = 'var(--red)';
-    nameIn.style.animation = 'shake 0.3s ease';
-    setTimeout(() => { nameIn.style.borderColor = ''; nameIn.style.animation = ''; }, 600);
+    nameIn.style.borderColor='var(--red)'; nameIn.style.animation='shake 0.3s ease';
+    setTimeout(()=>{nameIn.style.borderColor='';nameIn.style.animation='';},600);
     showToast('Enter your name before submitting!');
-    nameIn.disabled = false;
-    nameIn.focus();
-    return;
+    nameIn.disabled=false; nameIn.focus(); return;
   }
-  submitted = true;
-  subBtn.textContent = 'SUBMITTING…'; subBtn.disabled = true;
-
-  const entry = { ...lastResult, name: getName() };
-
+  submitted=true; subBtn.textContent='SUBMITTING…'; subBtn.disabled=true;
+  const entry={...lastResult,name:getName()};
   try {
-    await fbPush('scores', entry);
-    subBtn.textContent = '✓ SUBMITTED';
-    subBtn.className = 'btn ok';
-    loadScores(); // instant refresh after submit
+    await fbPush('scores',entry);
+    subBtn.textContent='✓ SUBMITTED'; subBtn.className='btn ok';
+    loadScores();
   } catch(e) {
-    console.warn('Submit failed:', e);
-    subBtn.textContent = 'FAILED — RETRY';
-    subBtn.className = 'btn primary'; subBtn.disabled = false;
-    submitted = false;
+    subBtn.textContent='FAILED — RETRY'; subBtn.className='btn primary'; subBtn.disabled=false; submitted=false;
   }
 }
 
 function skipAndWait() {
   resultOv.classList.remove('show');
-  const mt = MODES[mode];
-  zone.className = `click-zone ready ${mt.cls}`;
-  zoneHint.style.opacity = '1';
-  zoneTitle.textContent = mt.title; zoneSub.textContent = mt.sub;
-  zoneCtr.textContent = '0';
-  count = 0; running = false; startTime = null; lastResult = null; submitted = false;
-  clearInterval(ticker);
-  DURATION = +durSel.value;
-  resetDisplay();
-  nameIn.disabled = false;
+  const mt=MODES[mode];
+  zone.className=`click-zone ready ${mt.cls}`; zoneHint.style.opacity='1';
+  zoneTitle.textContent=mt.title; zoneSub.textContent=mt.sub; zoneCtr.textContent='0';
+  count=0; running=false; startTime=null; lastResult=null; submitted=false;
+  clearInterval(ticker); DURATION=+durSel.value; resetDisplay(); nameIn.disabled=false;
 }
 
 function resetDisplay() {
-  tbar.style.width = '100%'; tbar.className = 'tbar';
-  tbar.style.background = MODES[mode].tbarColor;
-  sRate.textContent = '0.0'; sCount.textContent = '0'; sTime.textContent = DURATION.toFixed(1);
-  updatePb();
+  tbar.style.width='100%'; tbar.className='tbar'; tbar.style.background=MODES[mode].color;
+  sRate.textContent='0.0'; sCount.textContent='0'; sTime.textContent=DURATION.toFixed(1); updatePb();
 }
-
 function updatePb() {
-  const pb = parseFloat(localStorage.getItem(`pb_${mode}_${DURATION}`)||'0');
-  sPb.textContent = pb > 0 ? (mode==='scroll' ? Math.round(pb) : pb.toFixed(1)) : '—';
+  const pb=parseFloat(localStorage.getItem(`pb_${mode}_${DURATION}`)||'0');
+  sPb.textContent=pb>0?(mode==='scroll'?Math.round(pb):pb.toFixed(1)):'—';
 }
+function getName() { return nameIn.value.trim()||'Anonymous'; }
 
-function getName() { return nameIn.value.trim() || 'Anonymous'; }
-
-// ── LEADERBOARD FILTER ────────────────────────────────────────────────────────
+// ── LEADERBOARD ───────────────────────────────────────────────────────────────
+let lastHash='';
+async function loadScores() {
+  try {
+    const data=await fbGet('scores');
+    const ns={};
+    if (data) Object.entries(data).forEach(([k,v])=>{if(v&&v.id)ns[k]=v;});
+    const h=JSON.stringify(ns);
+    if (h!==lastHash) { lastHash=h; scores=ns; renderLb(); }
+    cdot.className='cdot ok'; ctext.textContent='connected · live';
+  } catch(e) { cdot.className='cdot err'; ctext.textContent='retrying…'; }
+}
 function setFilter(f) {
-  lbFilter = f;
-  document.querySelectorAll('.lbf').forEach(b => b.classList.toggle('active', b.dataset.f===f));
+  lbFilter=f;
+  document.querySelectorAll('.lbf').forEach(b=>b.classList.toggle('active',b.dataset.f===f));
   renderLb();
 }
-
-// ── RENDER LEADERBOARD ────────────────────────────────────────────────────────
 function renderLb() {
-  let entries = Object.values(scores);
-  if (lbFilter !== 'all') entries = entries.filter(e => e.mode===lbFilter);
-  entries.sort((a,b) => b.score - a.score);
-  lbCnt.textContent = Object.values(scores).length + ' entr' + (Object.values(scores).length===1?'y':'ies');
-
-  if (entries.length === 0) {
-    lbList.innerHTML = '<div class="lb-empty"><div class="lb-empty-icon">◎</div><div class="lb-empty-txt">no scores yet — be first!</div></div>';
-    return;
-  }
-  const top = entries[0].score || 1;
-  lbList.innerHTML = entries.map((e,i) => {
-    const rank=i+1, rc=rank<=3?`rk${rank}`:'', me=e.id===myId?'me':'';
-    const pct = Math.round((e.score/top)*100);
-    const sc  = e.mode==='scroll' ? Math.round(e.score) : e.score.toFixed(1);
-    const unit = e.mode==='scroll'?'px/s':e.mode==='space'?'sps':'cps';
+  let en=Object.values(scores);
+  if (lbFilter!=='all') en=en.filter(e=>e.mode===lbFilter);
+  en.sort((a,b)=>b.score-a.score);
+  lbCnt.textContent=Object.values(scores).length+' entr'+(Object.values(scores).length===1?'y':'ies');
+  if (en.length===0) { lbList.innerHTML='<div class="lb-empty"><div class="lb-empty-icon">◎</div><div class="lb-empty-txt">no scores yet — be first!</div></div>'; return; }
+  const top=en[0].score||1;
+  lbList.innerHTML=en.map((e,i)=>{
+    const rank=i+1,rc=rank<=3?`rk${rank}`:'',me=e.id===myId?'me':'';
+    const pct=Math.round((e.score/top)*100);
+    const sc=e.mode==='scroll'?Math.round(e.score):e.score.toFixed(1);
+    const unit=e.mode==='scroll'?'px/s':e.mode==='space'?'sps':'cps';
+    const adminTag=e.name==='[ADMIN]'?'<span style="font-size:8px;color:var(--orange);margin-left:3px;">★</span>':'';
     return `<div class="lb-row ${rc} ${me}">
       <div class="lb-rank">${String(rank).padStart(2,'0')}</div>
       <div class="lb-name-col">
-        <div class="lb-name"><span class="mdot mdot-${e.mode}"></span>${esc(e.name)}</div>
+        <div class="lb-name"><span class="mdot mdot-${e.mode}"></span>${esc(e.name)}${adminTag}</div>
         <div class="lb-bbar"><div class="lb-bfill" style="width:${pct}%"></div></div>
       </div>
       <div class="lb-score">${sc}</div>
@@ -689,26 +776,258 @@ function renderLb() {
   }).join('');
 }
 
-async function clearBoard() {
-  if (!confirm('Clear ALL scores from the leaderboard?')) return;
+// ── CHAT ─────────────────────────────────────────────────────────────────────
+const BAD = ['fuck','shit','ass','bitch','bastard','crap','piss','dick','cock','pussy','cunt','nigger','nigga','faggot','retard','whore','slut','kill','murder','rape','idiot','stupid','dumb','moron','jerk','freak','kys','stfu','fk','fck','f4ck','sh1t','b1tch','a55','d1ck','fag','nazi','terrorist','porn','sex','hate'];
+function isClean(msg) {
+  const low=msg.toLowerCase().replace(/[^a-z0-9\s]/g,'');
+  return !BAD.some(b=>low.includes(b)) && msg.trim().length>0;
+}
+let chatCount=0;
+async function loadChat() {
   try {
-    await fbDelete('scores');
-    scores = {}; renderLb();
-  } catch(e) { console.warn('Clear failed:', e); }
+    const data=await fbGet('chat');
+    if (!data) return;
+    const msgs=Object.values(data).sort((a,b)=>a.ts-b.ts).slice(-60);
+    if (msgs.length===chatCount) return;
+    chatCount=msgs.length;
+    const box=document.getElementById('chat-msgs');
+    const atBot=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+    box.innerHTML='<div class="chat-msg sys"><div class="chat-text">Welcome! Keep it clean and friendly 👋</div></div>';
+    msgs.forEach(m=>{
+      const d=document.createElement('div'); d.className='chat-msg';
+      const isAdm=m.name==='[ADMIN]';
+      const t=new Date(m.ts);
+      const time=t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');
+      d.innerHTML=`<div class="chat-name ${isAdm?'is-admin':''}">${esc(m.name)}${isAdm?'<span class="admin-star" title="Verified Admin">★</span>':''} <span class="chat-time">${time}</span></div><div class="chat-text">${esc(m.text)}</div>`;
+      box.appendChild(d);
+    });
+    if (atBot) box.scrollTop=box.scrollHeight;
+  } catch(e){}
+}
+async function sendChat() {
+  const inp=document.getElementById('chat-in');
+  const txt=inp.value.trim();
+  if (!txt) return;
+  const n=nameIn.value.trim();
+  if (!n) { showToast('Enter your name to chat!'); return; }
+  if (!isClean(txt)) {
+    inp.value=''; inp.style.borderColor='var(--red)'; inp.style.animation='shake 0.3s ease';
+    setTimeout(()=>{inp.style.borderColor='';inp.style.animation='';},600);
+    showToast('Keep it clean! Nice messages only 🧹');
+    return;
+  }
+  inp.value='';
+  try { await fbPush('chat',{name:n,text:txt,ts:Date.now(),uid:myId}); loadChat(); }
+  catch(e){ showToast('Message failed.'); }
 }
 
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// ── BATTLE ────────────────────────────────────────────────────────────────────
+async function loadRooms() {
+  try {
+    const data=await fbGet('battles');
+    const box=document.getElementById('b-rooms');
+    if (!data) { box.innerHTML='<div class="no-rooms">no open rooms</div>'; return; }
+    const open=Object.entries(data).filter(([k,v])=>v&&v.status==='waiting'&&v.host!==myId);
+    if (!open.length) { box.innerHTML='<div class="no-rooms">no open rooms</div>'; return; }
+    box.innerHTML=open.map(([k,v])=>`
+      <div class="battle-room-row">
+        <div><div class="brr-name">${esc(v.hostName)}</div><div class="brr-info">${v.duration}s · click</div></div>
+        <button class="btn primary" style="font-size:11px;padding:5px 12px;" onclick="joinRoom('${k}')">JOIN</button>
+      </div>`).join('');
+  } catch(e){}
+}
+
+async function createRoom() {
+  const n=nameIn.value.trim(); if (!n){showToast('Enter your name first!');return;}
+
+  const dur=+durSel.value;
+  const room={host:myId,hostName:n,guest:null,guestName:null,hostScore:0,guestScore:0,hostClicks:0,guestClicks:0,duration:dur,status:'waiting',ts:Date.now()};
+  try {
+    const res=await fbPush('battles',room);
+    myRoom=res.name; myRole='host'; battleDone=false;
+    showActiveView({...room}); startBattlePoll(); showToast('Room created! Waiting…','var(--blue)');
+  } catch(e){showToast('Failed to create room.');}
+}
+
+async function joinRoom(key) {
+  const n=nameIn.value.trim(); if (!n){showToast('Enter your name first!');return;}
+  try {
+    await fbPatch(`battles/${key}`,{guest:myId,guestName:n,status:'ready'});
+    myRoom=key; myRole='guest'; battleDone=false;
+    const data=await fbGet(`battles/${key}`);
+    showActiveView(data); startBattlePoll();
+  } catch(e){showToast('Failed to join.');}
+}
+
+function showActiveView(data) {
+  document.getElementById('b-lobby').style.display='none';
+  document.getElementById('b-active').style.display='flex';
+  document.getElementById('bav-result').style.display='none';
+  document.getElementById('bav-p1').textContent=data.hostName||'—';
+  document.getElementById('bav-p2').textContent=data.guestName||'waiting…';
+  document.getElementById('bav-s1').textContent='0.0';
+  document.getElementById('bav-s2').textContent='0.0';
+  document.getElementById('bav-bar').style.width='100%';
+  document.getElementById('bav-status').textContent='waiting for opponent…';
+}
+
+function startBattlePoll() {
+  if (battlePollTimer) clearInterval(battlePollTimer);
+  battlePollTimer=setInterval(async()=>{
+    if (!myRoom) return;
+    try {
+      const data=await fbGet(`battles/${myRoom}`);
+      if (!data){leaveRoom();return;}
+      document.getElementById('bav-p1').textContent=data.hostName||'—';
+      document.getElementById('bav-p2').textContent=data.guestName||'waiting…';
+      const hs=parseFloat(data.hostScore||0), gs=parseFloat(data.guestScore||0);
+      const s1=document.getElementById('bav-s1'), s2=document.getElementById('bav-s2');
+      s1.textContent=hs.toFixed(1); s2.textContent=gs.toFixed(1);
+      s1.className='bav-pscore'+(hs>gs?' win':hs<gs?' lose':'');
+      s2.className='bav-pscore'+(gs>hs?' win':gs<hs?' lose':'');
+      // Both sides start their own independent countdown when status = running
+      if (data.status==='ready' && myRole==='host' && !battleRunning && !battleDone && !battleReady) {
+        await fbPatch(`battles/${myRoom}`, {status:'running'});
+        startCountdown(data.duration);
+      }
+      if (data.status==='running' && myRole==='guest' && !battleRunning && !battleDone && !battleReady) {
+        battleDuration = data.duration;
+        battleReady = true;
+        document.getElementById('bav-status').textContent = 'click the zone when ready!';
+      }
+      if ((data.hostDone && data.guestDone) && !battleDone) { battleDone=true; showBattleResult(data); }
+      // Also handle if one side finished but other hasn't yet
+      if (data.status==='finished' && !battleDone) { battleDone=true; showBattleResult(data); }
+    } catch(e){}
+  },1000);
+}
+
+function startCountdown(dur) {
+  // No forced countdown — show a "CLICK ZONE TO START" prompt
+  // Each player starts their own timer when they first click the zone
+  document.getElementById('bav-status').textContent='click the zone when ready!';
+  document.getElementById('bav-p1').textContent = myRole==='host' ? (nameIn.value.trim()||'You') : document.getElementById('bav-p1').textContent;
+  battleDuration = dur;
+  battleReady = true; // flag: this player can now self-start
+}
+
+function startBattle(dur) {
+  // Cap duration: selected dur, max 15s extra beyond selected
+  const maxDur = Math.min(dur + 15, 30);
+  const actualDur = dur; // use selected duration
+  battleRunning=true; battleStart=Date.now();
+  document.getElementById('bav-status').textContent='GO!';
+  zoneTitle.textContent='⚔️ CLICK!';
+  zoneSub.textContent='battle — click as fast as you can!';
+  zoneHint.style.opacity='0.5';
+  zone.classList.remove('done');
+  zone.classList.add('running','mc');
+  battleTicker=setInterval(async()=>{
+    const el=(Date.now()-battleStart)/1000, rem=Math.max(0,actualDur-el);
+    document.getElementById('bav-bar').style.width=((rem/actualDur)*100)+'%';
+    document.getElementById('bav-bar').className='bav-bar'+(rem<actualDur*0.3?' urgent':'');
+    const liveCps=el>0?(battleClicks/el).toFixed(1):'0.0';
+    document.getElementById('bav-status').textContent=`${rem.toFixed(1)}s — you: ${liveCps} CPS`;
+    if (myRoom) {
+      const f=myRole==='host'
+        ?{hostScore:el>0?parseFloat((battleClicks/el).toFixed(2)):0,hostClicks:battleClicks}
+        :{guestScore:el>0?parseFloat((battleClicks/el).toFixed(2)):0,guestClicks:battleClicks};
+      fbPatch(`battles/${myRoom}`,f).catch(()=>{});
+    }
+    if (rem<=0) {
+      battleRunning=false; clearInterval(battleTicker);
+      const fs=parseFloat((battleClicks/actualDur).toFixed(2));
+      const mt=MODES[mode];
+      zone.className=`click-zone ready ${mt.cls}`;
+      zoneHint.style.opacity='1';
+      zoneTitle.textContent=mt.title; zoneSub.textContent=mt.sub;
+      document.getElementById('bav-status').textContent='done! waiting for opponent…';
+      if (myRoom) {
+        const f=myRole==='host'?{hostScore:fs,hostDone:true}:{guestScore:fs,guestDone:true};
+        fbPatch(`battles/${myRoom}`,f).catch(()=>{});
+      }
+    }
+  },100);
+}
+
+function showBattleResult(data) {
+  clearInterval(battleTicker); clearInterval(battlePollTimer);
+  document.getElementById('bav-result').style.display='flex';
+  document.getElementById('bav-status').textContent='done!';
+  const hs=parseFloat(data.hostScore||0), gs=parseFloat(data.guestScore||0);
+  const isMe=(myRole==='host'&&hs>=gs)||(myRole==='guest'&&gs>=hs);
+  const winName=hs>gs?data.hostName:gs>hs?data.guestName:'TIE';
+  document.getElementById('bav-winner').textContent=winName==='TIE'?"IT'S A TIE!":isMe?'🏆 YOU WIN!':`${winName} WINS!`;
+  document.getElementById('bav-winner-sub').textContent=`${hs.toFixed(1)} vs ${gs.toFixed(1)} CPS`;
+  setTimeout(()=>{ if(myRoom) fbDelete(`battles/${myRoom}`).catch(()=>{}); },30000);
+}
+
+function leaveRoom() {
+  clearInterval(battleTicker); clearInterval(battlePollTimer);
+  if (myRoom&&myRole==='host') fbDelete(`battles/${myRoom}`).catch(()=>{});
+  myRoom=null; myRole=null; battleRunning=false; battleDone=false; battleReady=false;
+  document.getElementById('b-lobby').style.display='flex';
+  document.getElementById('b-active').style.display='none';
+  loadRooms();
+}
+
+// ── ADMIN ─────────────────────────────────────────────────────────────────────
+function adminPrompt() {
+  document.getElementById('admin-in').value='';
+  document.getElementById('admin-err').textContent='';
+  document.getElementById('admin-in').classList.remove('wrong');
+  document.getElementById('modal-admin').classList.add('show');
+  setTimeout(()=>document.getElementById('admin-in').focus(),100);
+}
+function closeAdminModal() { document.getElementById('modal-admin').classList.remove('show'); }
+function checkAdmin() {
+  const v=document.getElementById('admin-in').value.trim();
+  const inp=document.getElementById('admin-in');
+  if (v===ADMIN_CODE) {
+    closeAdminModal(); activateAdmin();
+  } else {
+    inp.classList.add('wrong'); document.getElementById('admin-err').textContent='incorrect passcode';
+    setTimeout(()=>inp.classList.remove('wrong'),600);
+  }
+}
+function activateAdmin() {
+  document.body.classList.add('admin-mode');
+  document.getElementById('admin-badge').classList.add('visible');
+  nameIn.value='[ADMIN]'; nameIn.disabled=true;
+  showToast('Admin mode activated.','var(--orange)');
+}
+function revokeAdmin() {
+  if (!confirm('Leave admin mode? Your [ADMIN] status will be removed.')) return;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('admin-badge').classList.remove('visible');
+  nameIn.value=''; nameIn.disabled=false;
+  showToast('Admin mode deactivated.');
+}
+async function adminClearBoard() {
+  if (!confirm('Clear ALL scores for everyone? Cannot be undone.')) return;
+  try { await fbDelete('scores'); scores={}; renderLb(); showToast('Leaderboard cleared.','var(--orange)'); }
+  catch(e) { showToast('Clear failed.'); }
+}
+
+// Block fake admin names
+nameIn.addEventListener('input', ()=>{
+  if (document.body.classList.contains('admin-mode')) return;
+  const v=nameIn.value.toUpperCase().replace(/\s/g,'');
+  if (['[ADMIN]','ADMIN','[ADMIN','ADMIN]'].some(b=>v.includes(b.replace(/\s/g,'')))) {
+    nameIn.value='';
+    nameIn.style.borderColor='var(--red)'; nameIn.style.animation='shake 0.3s ease';
+    setTimeout(()=>{nameIn.style.borderColor='';nameIn.style.animation='';},600);
+    showToast("[ LOL YOU'RE NOT AN ADMIN ]");
+  }
+});
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
-DURATION = +durSel.value;
-resetDisplay();
-startStream();  // connect Firebase SSE — loads all scores + watches for new ones
+DURATION=+durSel.value; resetDisplay();
+loadScores(); setInterval(loadScores, 1000);
+loadChat();   setInterval(loadChat,   2000);
+loadRooms();  setInterval(loadRooms,  3000);
 </script>
-
-<div class="toast" id="toast">
-  <span class="toast-icon">⚠️</span>
-  <span id="toast-msg">Enter your name before submitting!</span>
-  <span class="toast-close" onclick="hideToast()">✕</span>
-</div>
 </body>
 </html>
