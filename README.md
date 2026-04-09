@@ -63,6 +63,7 @@ Personal history graph — track how your CPS improves over time
 
 Copyright Notice
 © 2026 Pixlect Studios Official. All rights reserved.
+© 2026 CPS LAB [By: Pixlect studios official] all rights reserved.
 CPS Lab is an original product developed and owned by Pixlect Studios Official. The design, code, systems, rank structure, brand identity, and all associated intellectual property are the exclusive property of Pixlect Studios Official.
 Unauthorized copying, reproduction, redistribution, modification, or commercial use of any part of this platform — in whole or in part — without prior written permission from Pixlect Studios Official is strictly prohibited.
 CPS Lab™ — By Pixlect Studios Official
