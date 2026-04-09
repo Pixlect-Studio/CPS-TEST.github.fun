@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -403,6 +404,9 @@ body.helper-mode .erase-btn { display: none !important; }
   border: 1px solid var(--b2);
 }
 .rtab:hover::after { opacity: 1; }
+
+#main-pwd-input { color: var(--tx) !important; }
+#main-pwd-input::placeholder { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -433,6 +437,13 @@ body.helper-mode .erase-btn { display: none !important; }
         <option value="10">10s</option>
         <option value="15">15s</option>
       </select>
+    </div>
+
+    <!-- Login row -->
+    <div class="controls-row" id="pwd-row" style="gap:8px;">
+      <input type="password" class="name-in" id="main-pwd-input" placeholder="Password (optional — to save your username)" maxlength="40" style="flex:1;">
+      <button id="login-btn" onclick="handleMainLogin()" style="background:var(--blue);border:none;color:#fff;font-family:'DM Mono',monospace;font-size:12px;padding:9px 16px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:background 0.15s;" onmouseover="this.style.background='var(--blue2)'" onmouseout="this.style.background='var(--blue)'">CONTINUE</button>
+      <div id="login-status" style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);align-self:center;white-space:nowrap;"></div>
     </div>
 
     <div class="mode-tabs">
@@ -2991,6 +3002,93 @@ function setTabUnread(tabId, hasUnread) {
 }
 
 // Unread detection happens inside loadChat / loadGcMsgs directly
+
+
+// ── MAIN LOGIN / REGISTER ─────────────────────────────────────────────────────
+let loggedIn = false;
+
+async function handleMainLogin() {
+  const name = nameIn.value.trim();
+  const pwd  = document.getElementById('main-pwd-input').value.trim();
+  const stat = document.getElementById('login-status');
+  const btn  = document.getElementById('login-btn');
+
+  if (!name) { showToast('Enter your username first!'); return; }
+  if (!pwd || pwd.length < 4) { showToast('Password must be at least 4 characters.'); return; }
+  if (myRank) { showToast('Ranked users cannot use password login.'); return; }
+
+  btn.disabled = true; btn.textContent = '...';
+  const key = btoa(name.toLowerCase()).replace(/[^a-zA-Z0-9]/g,'');
+
+  try {
+    const acc = await fbGet('accounts/' + key);
+
+    if (acc) {
+      // Account exists — try to login
+      const hash = await simpleHash(name.toLowerCase() + pwd);
+      if (acc.hash === hash) {
+        // Correct password — log in
+        myId = acc.uid || myId;
+        loggedIn = true;
+        nameIn.disabled = true;
+        document.getElementById('main-pwd-input').disabled = true;
+        btn.textContent = '✓ LOGGED IN';
+        btn.style.background = 'var(--green)';
+        stat.textContent = 'welcome back, ' + name + '!';
+        stat.style.color = 'var(--green)';
+        showToast('Welcome back, ' + name + '! 👋', 'var(--green)');
+        // Reload scores with correct uid
+        loadScores();
+      } else {
+        // Wrong password
+        stat.textContent = 'wrong password';
+        stat.style.color = 'var(--red)';
+        document.getElementById('main-pwd-input').style.borderColor = 'var(--red)';
+        setTimeout(() => {
+          document.getElementById('main-pwd-input').style.borderColor = '';
+          stat.textContent = '';
+        }, 2000);
+        btn.textContent = 'CONTINUE';
+        btn.disabled = false;
+      }
+    } else {
+      // No account — register this username + password
+      const hash = await simpleHash(name.toLowerCase() + pwd);
+      await fetch(FB + '/accounts/' + key + '.json', {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ name, hash, uid: myId, ts: Date.now() })
+      });
+      loggedIn = true;
+      nameIn.disabled = true;
+      document.getElementById('main-pwd-input').disabled = true;
+      btn.textContent = '✓ REGISTERED';
+      btn.style.background = 'var(--green)';
+      stat.textContent = name + ' is now yours!';
+      stat.style.color = 'var(--green)';
+      showToast('Username "' + name + '" registered! 🎉', 'var(--green)');
+    }
+  } catch(e) {
+    showToast('Login failed — try again.');
+    btn.textContent = 'CONTINUE';
+    btn.disabled = false;
+  }
+}
+
+// Allow logout
+function logoutAccount() {
+  loggedIn = false;
+  nameIn.disabled = false;
+  nameIn.value = '';
+  document.getElementById('main-pwd-input').disabled = false;
+  document.getElementById('main-pwd-input').value = '';
+  const btn = document.getElementById('login-btn');
+  btn.textContent = 'CONTINUE';
+  btn.style.background = 'var(--blue)';
+  btn.disabled = false;
+  document.getElementById('login-status').textContent = '';
+  showToast('Logged out.');
+}
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 DURATION=+durSel.value; resetDisplay();
